@@ -1,0 +1,31 @@
+<div>
+  <input type="date" name="date" id="date" [(ngModel)]="date">
+</div>
+
+<div>
+  Time Sheet
+</div>
+<form [formGroup]="dataForm" (submit)="onSubmit()">
+  <div formArrayName="content">
+    <div *ngFor="let item of getControls();let i=index;" [formGroupName]="i">
+      <input type="checkbox" id="name-{{i}}" name="name-{{i}}" formControlName="checked" (change)="onChecked(item.value.checked,i)">
+      <label for="name-{{i}}">{{item.value.name}}</label>
+      <select name="hours-{{i}}" id="hours-{{i}}" formControlName="hours">
+        <option [value]="undefined">Select</option>
+        <option *ngFor="let hour of allHours" [value]="hour">{{hour}}</option>
+      </select>
+      <span>hrs</span>
+      <select name="minutes-{{i}}" id="minutes-{{i}}" formControlName="minutes">
+        <option disabled [value]="undefined">Select</option>
+        <option *ngFor="let minute of allMinutes" [value]="minute">{{minute}}</option>
+      </select>
+      <span>mins</span>
+    </div>
+  </div>
+<button [disabled]="!dataForm.valid || !date" type="submit">
+  Save
+</button>
+<button type="button" (click)="resetData()">
+  Reset
+</button>
+</form>
