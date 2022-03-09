@@ -64,27 +64,29 @@ export class AppComponent implements OnInit {
 
   onSubmit() {
     const dataArray: DataArray[] = this.dataForm.getRawValue().content;
-    const body: DataArray[] = [];
-    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const onlyDate = new DatePipe('en-US').transform(this.date, 'yyyy-MM-dd');
-    dataArray.forEach((element) => {
-      if (element.checked) {
-        body.push({
-          name: element.name,
-          hours: Number(element.hours),
-          minutes: Number(element.minutes),
-          date: onlyDate ? onlyDate : '',
-          timezone: timezone,
-        });
-      }
-    });
+    if (dataArray.length > 0) {
+      const body: DataArray[] = [];
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const onlyDate = new DatePipe('en-US').transform(this.date, 'yyyy-MM-dd');
+      dataArray.forEach((element) => {
+        if (element.checked) {
+          body.push({
+            name: element.name,
+            hours: Number(element.hours),
+            minutes: Number(element.minutes),
+            date: onlyDate ? onlyDate : '',
+            timezone: timezone,
+          });
+        }
+      });
 
-    this.appService.insertTimeSheet(body).subscribe({
-      next: (res) => {},
-      error: (err) => {
-        console.error('ERROR IN INSERT TIMESHEET', err);
-      },
-    });
+      this.appService.insertTimeSheet(body).subscribe({
+        next: (res) => {},
+        error: (err) => {
+          console.error('ERROR IN INSERT TIMESHEET', err);
+        },
+      });
+    }
   }
 
   getControls() {
