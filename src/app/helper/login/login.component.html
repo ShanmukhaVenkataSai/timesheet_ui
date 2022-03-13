@@ -1,0 +1,30 @@
+<section class="main-content">
+    <img src="../../../assets/images/time_analysis.png" alt="time_analysis">
+    <div class="login-box">
+        <form *ngIf="login" (submit)="onSubmit()" [formGroup]="loginForm" class="login-content">
+            
+            <div class="login-username">
+                  <mat-form-field>
+                    <mat-label>Username/email</mat-label>
+                    <input matInput autocomplete="off" formControlName="username">
+                  </mat-form-field>
+            </div>
+            <div class="login-password">
+                <mat-form-field >
+                    <mat-label>Password</mat-label>
+                    <input matInput [type]="hide ? 'password' : 'text'" autocomplete="off" formControlName="password">
+                    <button  type="button" mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                      <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+            <div class="login-button">
+                <button mat-raised-button color="primary">Submit</button>
+            </div>
+            <div class="login-footer">
+                No account? <a class="cursor-pointer link-class" (click)="login=false">Signup.</a>
+            </div>
+        </form>
+        <app-signup *ngIf="!login" (login)="login=$event"></app-signup>
+    </div>
+</section>

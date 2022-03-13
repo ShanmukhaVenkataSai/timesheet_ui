@@ -1,0 +1,51 @@
+<div class="main-content">
+    <div class="calendar">
+      <input type="date" name="date" id="date" [(ngModel)]="date">
+    </div>
+    
+    <h4>
+      Time Sheet
+    </h4>
+    <div class="time-form">
+      <form [formGroup]="dataForm" (submit)="onSubmit()">
+        <div formArrayName="content">
+          <table>
+            <tr *ngFor="let item of getControls();let i=index;" [formGroupName]="i">
+              <td>
+                <input class="cursor-pointer checkbox-input" type="checkbox" id="name-{{i}}" name="name-{{i}}" formControlName="checked" (change)="onChecked(item.value.checked,i)">
+              </td>
+              <td>
+                <label class="cursor-pointer" for="name-{{i}}">{{item.value.name}}</label>
+              </td>
+              <td>
+                <select name="hours-{{i}}" id="hours-{{i}}" formControlName="hours">
+                  <option [value]="undefined">Select</option>
+                  <option *ngFor="let hour of allHours" [value]="hour">{{hour}}</option>
+                </select>
+                <span>hrs</span>
+              </td>
+              <td>
+                <select name="minutes-{{i}}" id="minutes-{{i}}" formControlName="minutes">
+                  <option disabled [value]="undefined">Select</option>
+                  <option *ngFor="let minute of allMinutes" [value]="minute">{{minute}}</option>
+                </select>
+                <span>mins</span>
+              </td>
+            </tr>
+          </table>
+          
+        </div>
+        <div class="button-section">
+          <button class="button save-button" [disabled]="!dataForm.valid || !date" type="submit">
+            Save
+          </button>
+          <button class="button reset-button" type="button" (click)="resetData()">
+            Reset
+          </button>
+        </div>
+    
+      </form>
+    </div>
+  </div>
+  
+  

@@ -14,17 +14,17 @@ export class AppService {
   constructor(private http: HttpClient) {}
 
   insertTimeSheet(body: any) {
-    const url = this.url + '/postTimeSheet';
+    const url = this.url + 'postTimeSheet';
     return this.http.post(url, body);
   }
 
   getConfig() {
-    const url = this.url + '/getConfig';
+    const url = this.url + 'getConfig';
     return this.http.get<ConfigResponse>(url);
   }
 
   getTimeSheet(date: string) {
-    const url = this.url + `/getTimeSheet?date=${date}`;
+    const url = this.url + `getTimeSheet?date=${date}`;
     return this.http.get<TimeSheetResponse>(url);
   }
 }

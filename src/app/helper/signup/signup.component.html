@@ -1,0 +1,33 @@
+<form [formGroup]="signupForm" (submit)="onSubmit()" class="login-content">
+            
+    <div class="login-username">
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput type="text" autocomplete="off" formControlName="username">
+          </mat-form-field>
+    </div>
+    <div class="login-username">
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput type="email" autocomplete="off" formControlName="email">
+        </mat-form-field>
+  </div>
+    <div class="login-password">
+        <mat-form-field >
+            <mat-label>Password</mat-label>
+            <input matInput type="password" autocomplete="off" formControlName="password">
+        </mat-form-field>
+    </div>
+    <div class="login-password">
+        <mat-form-field >
+            <mat-label>Confirm Password</mat-label>
+            <input matInput type="password" autocomplete="off" formControlName="confirmPassword">
+        </mat-form-field>
+    </div>
+    <div class="login-button">
+        <button mat-raised-button color="primary">Submit</button>
+    </div>
+    <div class="login-footer">
+        Already a member? <a class="cursor-pointer link-class" (click)="emitData()">Login.</a>
+    </div>
+</form>

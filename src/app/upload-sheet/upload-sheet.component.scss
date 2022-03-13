@@ -1,0 +1,52 @@
+$base-color: #3f51b5;
+$font-size: 1rem;
+
+.main-content {
+  width: 100%;
+}
+.calendar {
+  text-align: center;
+}
+.time-form {
+  font-size: $font-size;
+  .checkbox-input {
+    width: $font-size;
+    height: $font-size;
+  }
+  .button-section {
+    width: 100%;
+    text-align: right;
+  }
+  .button {
+    cursor: pointer;
+    width: 90px;
+    padding: 0.5rem 0.2rem;
+    border-radius: 0.3rem;
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  table {
+    border-spacing: 2rem 0.5rem;
+  }
+  select {
+    width: 90px;
+    outline: none;
+    border-radius: 0.2rem;
+    height: 25px;
+    padding: 0 0.2rem;
+  }
+  span {
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+  .save-button {
+    background: $base-color;
+    color: #ffffff;
+  }
+  .reset-button {
+    margin-left: 1rem;
+    background: #ff1717;
+    color: #ffffff;
+  }
+}
