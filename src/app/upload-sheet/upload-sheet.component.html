@@ -41,7 +41,7 @@
           
         </div>
         <div class="button-section">
-          <button class="button save-button" type="submit">
+          <button class="button save-button" [disabled]="!dataForm.valid || !date" type="submit">
             Save
           </button>
           <button class="button reset-button" type="button" (click)="resetData()">

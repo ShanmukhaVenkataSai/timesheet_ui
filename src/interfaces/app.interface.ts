@@ -12,6 +12,11 @@ export interface InsertTimeSheetRequest{
   timezone: string;
 }
 
+export interface InsertTimeSheetResPonse{
+  code:number;
+  data:any;
+}
+
 export interface Config {
   _id: string;
   name: string;

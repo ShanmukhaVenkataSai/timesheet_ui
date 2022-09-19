@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import {
   ConfigResponse,
   GetTimeSheetInterface,
+  InsertTimeSheetResPonse,
   TimeSheetResponse,
 } from 'src/interfaces/app.interface';
 
@@ -16,7 +17,7 @@ export class AppService {
 
   insertTimeSheet(body: any) {
     const url = this.url + 'postTimeSheet';
-    return this.http.post(url, body);
+    return this.http.post<InsertTimeSheetResPonse>(url, body);
   }
 
   getConfig() {

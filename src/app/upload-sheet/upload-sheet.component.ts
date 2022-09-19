@@ -122,8 +122,17 @@ export class UploadSheetComponent implements OnInit {
         }
       });
       this.appService.insertTimeSheet(body).subscribe({
-        next: (res) => {},
+        next: (res) => {
+          if(res.code==200){
+            if(res.data.acknowledged){
+              this.sharedService.openSnackBar('Data Updated Successfully',undefined,'success')
+            }else{
+              this.sharedService.openSnackBar('Data Inserted Successfully',undefined,'success')
+            }
+          }
+        },
         error: (err) => {
+          this.sharedService.openSnackBar('Something went wrong',undefined,'failure')
           console.error('ERROR IN INSERT TIMESHEET', err);
         },
       });

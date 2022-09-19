@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
+import { MatSnackBarConfig } from '@angular/material/snack-bar';
 import {
   FormBuilder,
   FormControl,
@@ -10,6 +10,7 @@ import { Login } from 'src/interfaces/login.interface';
 
 import { HelperService } from '../helper.service';
 import { Router } from '@angular/router';
+import { SharedService } from 'src/shared/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private helperService: HelperService,
-    private snackBar: MatSnackBar,
+    private sharedService: SharedService,
     private router: Router
   ) {}
 
@@ -37,14 +38,6 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  openSnackBar(
-    message: string,
-    action: string | undefined,
-    options: MatSnackBarConfig
-  ) {
-    this.snackBar.open(message, action, options);
-  }
-
   onSubmit() {
     const formData: Login = this.loginForm.getRawValue();
     this.helperService.login(formData).subscribe({
@@ -54,28 +47,26 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         if (err.error.code == 404 || err.error.code == 401) {
-          const snackbarConfig = new MatSnackBarConfig();
-          snackbarConfig.panelClass = 'snack-failure-msg';
-          snackbarConfig.duration = 2000;
-          this.openSnackBar(
+          this.sharedService.openSnackBar(
             'Invalid Email or Password',
             undefined,
-            snackbarConfig
+            'failure',
+            2000
           );
         } else if (err.error.code == 403) {
-          const snackbarConfig = new MatSnackBarConfig();
-          snackbarConfig.panelClass = 'snack-failure-msg';
-          snackbarConfig.duration = 4000;
-          this.openSnackBar(
+          this.sharedService.openSnackBar(
             'Inactive User. Please contact admin to activate your Account.',
             undefined,
-            snackbarConfig
+            'failure',
+            4000
           );
         } else if (err.error.code == 409) {
-          const snackbarConfig = new MatSnackBarConfig();
-          snackbarConfig.panelClass = 'snack-failure-msg';
-          snackbarConfig.duration = 3000;
-          this.openSnackBar('Something went wrong', undefined, snackbarConfig);
+          this.sharedService.openSnackBar(
+            'Something went wrong',
+            undefined,
+            'failure',
+            3000
+          );
         }
       },
     });
