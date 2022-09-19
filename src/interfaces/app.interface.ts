@@ -3,7 +3,12 @@ export interface DataArray {
   name: string;
   hours: number | undefined;
   minutes: number | undefined;
-  date: string;
+}
+
+export interface InsertTimeSheetRequest{
+  date:string;
+  data:DataArray[],
+  user:string,
   timezone: string;
 }
 
@@ -22,15 +27,15 @@ export interface ConfigResponse {
 }
 
 export interface TimeSheet {
-  createdAt: string;
-  date: string;
   hours: number;
   minutes: number;
   name: string;
-  timezone: string;
-  updatedAt: string;
-  __v: number;
-  _id: string;
+}
+
+export interface GetTimeSheetInterface{
+    date: string;
+    timezone: string;
+    user: string;
 }
 
 export interface TimeSheetResponse {

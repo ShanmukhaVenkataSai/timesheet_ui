@@ -53,6 +53,10 @@ $timeline_ui-theme: mat.define-light-theme(
   text-decoration: underline;
 }
 
+.btn-disabled{
+  cursor: no-drop;
+}
+
 html,
 body {
   height: 100%;

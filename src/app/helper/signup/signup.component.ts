@@ -21,7 +21,8 @@ export class SignupComponent implements OnInit {
 
   ngOnInit(): void {
     this.signupForm = this.fb.group({
-      username: new FormControl(undefined, Validators.required),
+      first_name: new FormControl(undefined, Validators.required),
+      last_name: new FormControl(undefined),
       email: new FormControl(undefined, Validators.required),
       password: new FormControl(undefined, Validators.required),
       confirmPassword: new FormControl(undefined, Validators.required),
@@ -33,14 +34,24 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.signupForm.valid);
-    const formData = this.signupForm.getRawValue();
-    console.log(formData, 'formData');
-    this.helperService.signup(formData).subscribe({
-      next: (res) => {},
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    if(this.signupForm.valid){
+      const formData = this.signupForm.getRawValue();
+      formData.first_name=formData.first_name.trim()
+      formData.last_name=formData.last_name.trim()
+      formData.email=formData.email.trim()
+      formData.password=formData.password.trim()
+      formData.confirmPassword=formData.confirmPassword.trim()
+      this.helperService.signup(formData).subscribe({
+        next: (res:any) => {
+          if(res.code==200){
+            this.emitData()
+          }
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
+    }
+  
   }
 }

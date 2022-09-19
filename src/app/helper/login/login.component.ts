@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: new FormControl(undefined, Validators.required),
+      email: new FormControl(undefined, Validators.required),
       password: new FormControl(undefined, Validators.required),
     });
   }
@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
           snackbarConfig.panelClass = 'snack-failure-msg';
           snackbarConfig.duration = 2000;
           this.openSnackBar(
-            'Invalid Username or Password',
+            'Invalid Email or Password',
             undefined,
             snackbarConfig
           );

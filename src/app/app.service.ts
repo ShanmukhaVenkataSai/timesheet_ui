@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import {
   ConfigResponse,
+  GetTimeSheetInterface,
   TimeSheetResponse,
 } from 'src/interfaces/app.interface';
 
@@ -23,8 +24,8 @@ export class AppService {
     return this.http.get<ConfigResponse>(url);
   }
 
-  getTimeSheet(date: string) {
-    const url = this.url + `getTimeSheet?date=${date}`;
-    return this.http.get<TimeSheetResponse>(url);
+  getTimeSheet(body: GetTimeSheetInterface) {
+    const url = this.url + `getTimeSheet`;
+    return this.http.post<TimeSheetResponse>(url,body);
   }
 }

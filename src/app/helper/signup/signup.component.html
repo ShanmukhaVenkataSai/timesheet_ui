@@ -2,10 +2,16 @@
             
     <div class="login-username">
           <mat-form-field>
-            <mat-label>Username</mat-label>
-            <input matInput type="text" autocomplete="off" formControlName="username">
+            <mat-label>First name</mat-label>
+            <input matInput type="text" autocomplete="off" formControlName="first_name">
           </mat-form-field>
     </div>
+    <div class="login-username">
+        <mat-form-field>
+          <mat-label>Last name</mat-label>
+          <input matInput type="text" autocomplete="off" formControlName="last_name">
+        </mat-form-field>
+  </div>
     <div class="login-username">
         <mat-form-field>
           <mat-label>Email</mat-label>
@@ -25,7 +31,7 @@
         </mat-form-field>
     </div>
     <div class="login-button">
-        <button mat-raised-button color="primary">Submit</button>
+        <button [disabled]="!signupForm.valid" [ngClass]="{'btn-disabled':!signupForm.valid}" mat-raised-button color="primary">Submit</button>
     </div>
     <div class="login-footer">
         Already a member? <a class="cursor-pointer link-class" (click)="emitData()">Login.</a>

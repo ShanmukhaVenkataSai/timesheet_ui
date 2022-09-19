@@ -7,16 +7,17 @@ import {
   Validators,
 } from '@angular/forms';
 import { AppService } from '../app.service';
-import { Config, DataArray } from 'src/interfaces/app.interface';
+import { Config, DataArray, InsertTimeSheetRequest } from 'src/interfaces/app.interface';
 import { DatePipe } from '@angular/common';
+import { SharedService } from 'src/shared/shared.service';
+import { userDetails } from 'src/interfaces/storage.interface';
 
 @Component({
   selector: 'app-upload-sheet',
   templateUrl: './upload-sheet.component.html',
-  styleUrls: ['./upload-sheet.component.scss']
+  styleUrls: ['./upload-sheet.component.scss'],
 })
 export class UploadSheetComponent implements OnInit {
-
   date: Date = new Date();
 
   formArray: FormArray;
@@ -32,9 +33,19 @@ export class UploadSheetComponent implements OnInit {
 
   dataForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private appService: AppService) {}
+  userDetails: userDetails;
+
+  timeZone: string;
+
+  constructor(
+    private fb: FormBuilder,
+    private appService: AppService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
+    this.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    this.userDetails = this.sharedService.getUserDetails();
     this.dataForm = this.fb.group({
       content: this.fb.array([]),
     });
@@ -44,7 +55,6 @@ export class UploadSheetComponent implements OnInit {
   getConfig() {
     this.appService.getConfig().subscribe((data) => {
       this.configData = data.data;
-      this.resetData();
       this.getTimeSheet();
     });
   }
@@ -52,8 +62,36 @@ export class UploadSheetComponent implements OnInit {
   getTimeSheet() {
     const date = new DatePipe('en-US').transform(this.date, 'yyyy-MM-dd');
     if (date) {
-      this.appService.getTimeSheet(date).subscribe({
-        next: (res) => {},
+      let body = {
+        date,
+        timezone: this.timeZone,
+        user: this.userDetails.email,
+      };
+      this.appService.getTimeSheet(body).subscribe({
+        next: (res) => {
+          if (res.code == 200) {
+            this.dataForm = this.fb.group({
+              content: this.fb.array([]),
+            });
+            let dataArray = <FormArray>this.dataForm.get('content');
+            this.configData.forEach((element) => {
+              let hr = undefined,
+                min = undefined;
+              const index = res.data.findIndex((x) => x.name == element.name);
+              if (index != -1) {
+                hr =
+                  res.data[index].hours != 0
+                    ? res.data[index].hours
+                    : undefined;
+                min =
+                  res.data[index].minutes != 0
+                    ? res.data[index].minutes
+                    : undefined;
+              }
+              dataArray.push(this.createItem(element.name, hr, min));
+            });
+          }
+        },
         error: (err) => {
           console.error('ERROR IN getTimeSheet', err);
         },
@@ -64,21 +102,25 @@ export class UploadSheetComponent implements OnInit {
   onSubmit() {
     const dataArray: DataArray[] = this.dataForm.getRawValue().content;
     if (dataArray.length > 0) {
-      const body: DataArray[] = [];
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      const onlyDate = new DatePipe('en-US').transform(this.date, 'yyyy-MM-dd');
+      const onlyDate: any = new DatePipe('en-US').transform(
+        this.date,
+        'yyyy-MM-dd'
+      );
+      const body:InsertTimeSheetRequest = {
+        date:onlyDate,
+        data:[],
+        user: this.userDetails.email,
+        timezone: this.timeZone
+      };
       dataArray.forEach((element) => {
         if (element.checked) {
-          body.push({
+          body.data.push({
             name: element.name,
-            hours: Number(element.hours),
-            minutes: Number(element.minutes),
-            date: onlyDate ? onlyDate : '',
-            timezone: timezone,
+            hours: element.hours ?  Number(element.hours) : 0,
+            minutes: element.minutes ? Number(element.minutes) : 0,
           });
         }
       });
-
       this.appService.insertTimeSheet(body).subscribe({
         next: (res) => {},
         error: (err) => {
@@ -101,8 +143,6 @@ export class UploadSheetComponent implements OnInit {
       content[index].get('hours')?.updateValueAndValidity();
 
       content[index].get('minutes')?.enable();
-      content[index].get('minutes')?.setValidators([Validators.required]);
-      content[index].get('minutes')?.updateValueAndValidity();
       return;
     }
 
@@ -112,21 +152,21 @@ export class UploadSheetComponent implements OnInit {
     content[index].get('hours')?.updateValueAndValidity();
 
     content[index].get('minutes')?.disable();
-    content[index].get('minutes')?.clearValidators();
-    content[index].get('minutes')?.updateValueAndValidity();
   }
 
-  createItem(name: string) {
+  createItem(name: string, hours: any, minutes: any) {
+    const checked =
+      hours || hours == 0 || minutes || minutes == 0 ? true : false;
     return this.fb.group({
-      checked: new FormControl(false),
+      checked: new FormControl(checked),
       name: new FormControl(name),
       hours: new FormControl({
-        value: undefined,
-        disabled: true,
+        value: hours,
+        disabled: !checked,
       }),
       minutes: new FormControl({
-        value: undefined,
-        disabled: true,
+        value: minutes,
+        disabled: !checked,
       }),
     });
   }
@@ -137,7 +177,7 @@ export class UploadSheetComponent implements OnInit {
     });
     let dataArray = <FormArray>this.dataForm.get('content');
     this.configData.forEach((element) => {
-      dataArray.push(this.createItem(element.name));
+      dataArray.push(this.createItem(element.name, undefined, undefined));
     });
   }
 }
